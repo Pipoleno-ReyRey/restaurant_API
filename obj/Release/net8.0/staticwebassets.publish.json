@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "tbIQo8sbQ9KgcjNgcesrYuneQHx3L0rOzk4pspdjH/A=",
+  "Source": "RestaurantDishesAPI",
+  "BasePath": "_content/RestaurantDishesAPI",
+  "Mode": "Default",
+  "ManifestType": "Publish",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
