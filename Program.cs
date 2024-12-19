@@ -18,11 +18,13 @@ namespace RestaurantDishesAPI
             builder.Services.AddAuthentication();
             var app = builder.Build();
 
+            app.Urls.Add("http://0.0.0.0:5068");
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
 
             app.UseHttpsRedirection();
 
