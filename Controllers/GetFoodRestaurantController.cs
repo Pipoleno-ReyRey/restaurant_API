@@ -33,8 +33,8 @@ namespace RestaurantDishesAPI.Controllers
         [HttpPost("postOrder/{nameCustomer}+{dishes}")]
         public async void postOrder(string nameCustomer, string dishes)
         {
-            OrderReceipt order = new OrderReceipt();
-            order.CreateOrderUnionDish(dishes, nameCustomer);
+            OrderReceipt orderReceipt = new OrderReceipt();
+            orderReceipt.CreateOrderUnionDish(nameCustomer, dishes);
         }
 
         [HttpGet("getOrders")]
