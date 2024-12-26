@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantDishesAPI.Models;
-namespace RestaurantDishesAPI.Controllers
+
+namespace RestaurantDishesAPI.FoodController
 { 
     [ApiController]
-    [Route("api/[controller]")]
-    public class GetFoodRestaurantController : ControllerBase
+    [Route("api")]
+    public class FoodController : ControllerBase
     {
         [HttpGet("getFood")]
         public async Task<ActionResult<List<Dish>>> GetDishes()
@@ -27,22 +28,21 @@ namespace RestaurantDishesAPI.Controllers
         public async void PostDish([FromBody] Dish dish)
         {
             Dishes dishes = new Dishes();
-            dishes.AddDish(dish.nameDish, dish.descriptionDish, dish.typeDish, dish.ingredients, dish.timeGetsReady, dish.price, dish.img);
+            dishes.AddDish(dish);
         }
 
-        [HttpPost("postOrder/{nameCustomer}+{dishes}")]
-        public async void postOrder(string nameCustomer, string dishes)
-        {
-            OrderReceipt orderReceipt = new OrderReceipt();
-            orderReceipt.CreateOrderUnionDish(nameCustomer, dishes);
+        [HttpPut("editDish/{id}")]
+        public async Task<string> EditDish(int id, [FromBody] Dish dish){
+            Dishes dishes = new Dishes();
+            dishes.EditDish(id, dish);
+            return "edited";
         }
 
-        [HttpGet("getOrders")]
-        public async Task<ActionResult<List<Order>>> GetOrders()
-        {
-            Orders orders = new Orders();
-            List<Order> ordersList = await orders.OrderGet();
-            return ordersList;
+        [HttpDelete("deleteDish/{id}")]
+        public async Task<string> DeleteDish(int id){
+            Dishes dishes = new Dishes();
+            dishes.DeleteDish(id);
+            return "deleted";
         }
     }
 }

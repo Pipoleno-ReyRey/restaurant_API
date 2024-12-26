@@ -14,17 +14,19 @@ public class Dishes
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                var id = 0;
-                Int32.TryParse(reader["id"].ToString(), out id);
-                var nameDish = reader["nameDish"].ToString();
-                var descriptionDish = reader["descriptionDish"].ToString();
-                var typeDish = reader["typeDish"].ToString();
-                var ingredients = reader["ingredients"].ToString();
-                var timeGetsReady = reader["timeGetsReady"].ToString();
+                Dish dish = new Dish();
+                var ID = 0;
+                Int32.TryParse(reader["id"].ToString(), out ID);
+                dish.Id = ID;
+                dish.nameDish = reader["nameDish"].ToString();
+                dish.descriptionDish = reader["descriptionDish"].ToString();
+                dish.typeDish = reader["typeDish"].ToString();
+                dish.ingredients = reader["ingredients"].ToString();
+                dish.timeGetsReady = reader["timeGetsReady"].ToString();
                 float price = 0;
                 float.TryParse(reader["price"].ToString(), out price);
-                var img = reader["imgDish"].ToString();
-                Dish dish = new Dish(id, nameDish, descriptionDish, typeDish, ingredients, timeGetsReady, price, img);
+                dish.price = price;
+                dish.img = reader["imgDish"].ToString(); 
                 dishes.Add(dish);
             }
             await connector.CloseAsync();
@@ -34,7 +36,7 @@ public class Dishes
 
         public async Task<Dish> GetDish(int id)
         {
-            Dish dish = new Dish(0, "", "", "", "", "", 0, "");
+            Dish dish = new Dish();
             ConnectionDatabase conn = new ConnectionDatabase();
             MySqlConnection connection = new MySqlConnection(conn.connection);
             await connection.OpenAsync();
@@ -44,25 +46,46 @@ public class Dishes
             {
                 var ID = 0;
                 Int32.TryParse(reader["id"].ToString(), out ID);
-                var nameDish = reader["nameDish"].ToString();
-                var descriptionDish = reader["descriptionDish"].ToString();
-                var typeDish = reader["typeDish"].ToString();
-                var ingredients = reader["ingredients"].ToString();
-                var timeGetsReady = reader["timeGetsReady"].ToString();
+                dish.Id = ID;
+                dish.nameDish = reader["nameDish"].ToString();
+                dish.descriptionDish = reader["descriptionDish"].ToString();
+                dish.typeDish = reader["typeDish"].ToString();
+                dish.ingredients = reader["ingredients"].ToString();
+                dish.timeGetsReady = reader["timeGetsReady"].ToString();
                 float price = 0;
                 float.TryParse(reader["price"].ToString(), out price);
-                var img = reader["imgDish"].ToString();
-                dish = new Dish(ID, nameDish, descriptionDish, typeDish, ingredients, timeGetsReady, price, img);
+                dish.price = price;
+                dish.img = reader["imgDish"].ToString();                
             }
             return dish;
         }
 
-        public async void AddDish(string? nameDish, string? descriptionDish, string? typeDish, string? ingredients, string? timeGetsReady, float? Price, string? img)
+        public async void AddDish(Dish dish)
         {
             ConnectionDatabase conn = new ConnectionDatabase();
             MySqlConnection connection = new MySqlConnection(conn.connection);
             connection.Open();
-            MySqlCommand command = new MySqlCommand($"insert into Dish(nameDish, descriptionDish, typeDish, ingredients, timeGetsReady, price, imgDish) values ('{nameDish + "."}', '{descriptionDish}', '{typeDish}', '{ingredients}', '{timeGetsReady}', '{Price}', '{img}')", connection);
+            MySqlCommand command = new MySqlCommand($"insert into Dish(nameDish, descriptionDish, typeDish, ingredients, timeGetsReady, price, imgDish) values ('{dish.nameDish + "."}', '{dish.descriptionDish}', '{dish.typeDish}', '{dish.ingredients}', '{dish.timeGetsReady}', '{dish.price}', '{dish.img}')", connection);
+            await command.ExecuteNonQueryAsync();
+            await connection.CloseAsync();
+        }
+
+        public async void DeleteDish(int id)
+        {
+            ConnectionDatabase conn = new ConnectionDatabase();
+            MySqlConnection connection = new MySqlConnection(conn.connection);
+            connection.Open();
+            MySqlCommand command = new MySqlCommand($"delete from Dish where id = {id}", connection);
+            await command.ExecuteNonQueryAsync();
+            await connection.CloseAsync();
+        }
+
+        public async void EditDish(int id, Dish dish){
+
+            ConnectionDatabase conn = new ConnectionDatabase();
+            MySqlConnection connection = new MySqlConnection(conn.connection);
+            connection.Open();
+            MySqlCommand command = new MySqlCommand($"update Dish set nameDish='{dish.nameDish}', descriptionDish='{dish.descriptionDish}', typeDish='{dish.typeDish}', ingredients='{dish.ingredients}', timeGetsReady='{dish.timeGetsReady}', price={dish.price}, imgDish='{dish.img}' where id = {id}", connection);
             await command.ExecuteNonQueryAsync();
             await connection.CloseAsync();
         }

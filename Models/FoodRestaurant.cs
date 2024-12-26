@@ -30,46 +30,6 @@ namespace RestaurantDishesAPI.Models
             return count;
         }
 
-        private async Task<List<Dish>> GetDishesOrder(string dishes)
-        {
-            List<Dish> dishesOrder = new List<Dish>();
-            List<Dish> dishes1 = await GetOrderDishes();
-            foreach (var dish in dishes1)
-            {
-                if (dishes.Contains(dish.nameDish.Substring(0, dish.nameDish.Length - 1).ToLower()))
-                {
-                    dishesOrder.Add(dish);
-                }
-            }
-            return dishesOrder;
-        }
-        public async Task<Order> GetOrderSpecific(int id, string dishes)
-        {
-            Order order = new Order();
-            ConnectionDatabase connection = new ConnectionDatabase();
-            MySqlConnection mySqlConnection = new MySqlConnection(connection.connection);
-            mySqlConnection.Open();
-            MySqlCommand command = new MySqlCommand($"select * from orderReceipt where id = {order.id};", mySqlConnection);
-            MySqlDataReader reader = command.ExecuteReader();
-            while (reader.Read())
-            {
-                var nameCustomer = reader["nameCustomer"].ToString();
-                DateTime date = DateTime.Parse(reader["dateOrder"].ToString());
-                float count = float.Parse(reader["count"].ToString());
-                order = new Order();
-                order.id = id;
-                //order.count = await GetPriceOrder(dishes);
-            }
-            mySqlConnection.Close();
-
-            mySqlConnection.Open();
-            MySqlCommand mySqlCommand = new MySqlCommand($"update orderReceipt set count = {GetPriceOrder(dishes)} where id = {id};", mySqlConnection);
-            mySqlCommand.ExecuteNonQuery();
-            mySqlConnection.Close();
-
-            return order;
-        }
-
         public async Task<Order> CreateOrderElement(string? nameCustomer, string dishes)
         {
             Orders order = new Orders();

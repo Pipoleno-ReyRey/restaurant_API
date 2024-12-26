@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RestaurantDishesAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+122fb560f23cb4220b7519d27757caf8a4a86aec")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+42cab175c40dc71c23fc64294301bf6038675aa4")]
 [assembly: System.Reflection.AssemblyProductAttribute("RestaurantDishesAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RestaurantDishesAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

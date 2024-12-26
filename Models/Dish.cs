@@ -9,15 +9,4 @@
         public float? price { get; set; }
         public string? img { get; set; }
 
-        public Dish(int? id, string? nameDish, string? descriptionDish, string? typeDish, string? ingredients, string? timeGetsReady, float? price, string? img)
-        {
-            Id = id;
-            this.nameDish = nameDish;
-            this.descriptionDish = descriptionDish;
-            this.typeDish = typeDish;
-            this.ingredients = ingredients;
-            this.timeGetsReady = timeGetsReady;
-            this.price = price;
-            this.img = img;
-        }
     }
