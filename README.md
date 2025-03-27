@@ -8,6 +8,7 @@ API.
 # EndPoints
 
 Food
+
 GET /api/getFood
 GET /api/getDish/{id}
 POST /api/postDish
@@ -15,6 +16,7 @@ PUT /api/editDish/{id}
 DELETE /api/deleteDish/{id}
 
 Orders
+
 GET /api/getOrders
 POST /api/postOrder/{nameCustomer}+{dishes}
 
