@@ -25,12 +25,13 @@ public class OrderService : DataInteface
                 }
                 else
                 {
-                    List<OrderDish>? data = await db.ordersDishes.Where(od => od.orderId == id).ToListAsync();
-                    List<DishDTO>? dishes = new List<DishDTO>();
+                    OrderDish[] data = await db.ordersDishes.Where(od => od.orderId == id).ToArrayAsync();
+                    Dish[] dishes = await db.dish.ToArrayAsync();
+                    List<DishDTO>? dishesOrder = new List<DishDTO>();
                     foreach (OrderDish dish in data)
                     {
-                        Dish? x = await db.dish.FirstOrDefaultAsync(x => x.id == dish.dishId);
-                        dishes.Add(new DishDTO
+                        Dish? x = dishes.Where(d => d.id == dish.dishId).FirstOrDefault();
+                        dishesOrder.Add(new DishDTO
                         {
                             name = x!.name,
                             description = x.description,
@@ -47,7 +48,7 @@ public class OrderService : DataInteface
                     {
                         id = order!.id,
                         name = order.name,
-                        dishes = dishes,
+                        dishes = dishesOrder,
                         count = order.count,
                         date = order.date
                     };
@@ -121,8 +122,33 @@ public class OrderService : DataInteface
         throw new NotImplementedException();
     }
     
-    public Task<object> Delete(int id)
+    public async Task<object> Delete(int id)
     {
-        throw new NotImplementedException();
+        if (id <= 0)
+        {
+            return "id dont valid";
+        }
+        else
+        {
+            try
+            {
+                if (await db.ordersDishes.AnyAsync(d => d.orderId == id))
+                {
+                    var data = await db.orders.FirstOrDefaultAsync(od => od.id == id);
+                    await db.ordersDishes.Where(od => od.orderId == id).ExecuteDeleteAsync();
+                    await db.orders.Where(o => o.id == id).ExecuteDeleteAsync();
+                    await db.SaveChangesAsync();
+                    return data!;
+                }
+                else
+                {
+                    return "not deleted";
+                }
+            }
+            catch (Exception error)
+            {
+                return error.Message;
+            }
+        }
     }
 }

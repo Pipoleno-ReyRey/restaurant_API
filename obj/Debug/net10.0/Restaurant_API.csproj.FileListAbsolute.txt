@@ -116,3 +116,4 @@ D:\Restaurant_API\bin\Debug\net10.0\Swashbuckle.AspNetCore.Swagger.dll
 D:\Restaurant_API\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 D:\Restaurant_API\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 D:\Restaurant_API\obj\Debug\net10.0\Restaurant_API.MvcApplicationPartsAssemblyInfo.cs
+D:\Restaurant_API\obj\Debug\net10.0\Restaurant_API.sourcelink.json

@@ -12,6 +12,7 @@ builder.Services.AddScoped<OrderService>();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
 //dishes endpoints
 app.MapGet("dish/get_all", async (DishService ds) =>
 {
@@ -105,6 +106,18 @@ app.MapPost("order", async (OrderDTO order, OrderService service) =>
         return Results.Ok(data);
     }
 });
-app.UseSwagger();
-app.UseSwaggerUI();
+
+app.MapDelete("order/{id}", async (int id, OrderService service) =>
+{
+    var data = await service.Delete(id);
+    if (data is string)
+    {
+        return Results.BadRequest(data);
+    }
+    else
+    {
+        return Results.Ok(data);
+    }
+});
+
 app.Run();
