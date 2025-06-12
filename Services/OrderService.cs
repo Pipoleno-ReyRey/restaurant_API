@@ -1,6 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 
+
 public class OrderService : DataInteface
 {
     private readonly RestaurantDB db;
@@ -121,7 +122,7 @@ public class OrderService : DataInteface
     {
         throw new NotImplementedException();
     }
-    
+
     public async Task<object> Delete(int id)
     {
         if (id <= 0)

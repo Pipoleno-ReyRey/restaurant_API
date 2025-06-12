@@ -8,13 +8,13 @@ builder.Services.AddEndpointsApiExplorer();
 var credentials = builder.Configuration.GetConnectionString("credentials");
 builder.Services.AddDbContext<RestaurantDB>(opt => opt.UseNpgsql(credentials, o => o.MapEnum<enum_data>("enum_data")));
 builder.Services.AddScoped<DishService>();
-builder.Services.AddScoped<OrderService>();
+//builder.Services.AddScoped<OrderService>();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
 //dishes endpoints
-app.MapGet("dish/get_all", async (DishService ds) =>
+app.MapGet("dish/all", async (DishService ds) =>
 {
     var data = await ds.GetAll();
     if (data is string)
@@ -27,9 +27,9 @@ app.MapGet("dish/get_all", async (DishService ds) =>
     }
 });
 
-app.MapGet("dish/{id}", async (int id, DishService ds) =>
+app.MapGet("dish/{name}", async (string name, DishService ds) =>
 {
-    var data = await ds.Get(id);
+    var data = await ds.Get(name);
     if (data is string)
     {
         return Results.BadRequest(data);
@@ -53,9 +53,9 @@ app.MapPost("dish/post", async (DishDTO dish, DishService ds) =>
     }
 });
 
-app.MapPut("dish/update/{id}", async (int id, DishDTO dish, DishService ds) =>
+app.MapPut("dish/update/{name}", async (string name, DishDTO dish, DishService ds) =>
 {
-    var data = await ds.Update(id, dish);
+    var data = await ds.Update(name, dish);
     if (data is string)
     {
         return Results.BadRequest(data);
@@ -66,9 +66,9 @@ app.MapPut("dish/update/{id}", async (int id, DishDTO dish, DishService ds) =>
     }
 });
 
-app.MapDelete("dish/delete/{id}", async (int id, DishService ds) =>
+app.MapDelete("dish/delete/{name}", async (string name, DishService ds) =>
 {
-    var data = await ds.Delete(id);
+    var data = await ds.Delete(name);
     if (data is string)
     {
         return Results.BadRequest(data);
@@ -79,7 +79,7 @@ app.MapDelete("dish/delete/{id}", async (int id, DishService ds) =>
     }
 });
 
-
+/*
 //orders endpoints
 app.MapGet("order/{id}", async (int id, OrderService service) =>
 {
@@ -119,5 +119,5 @@ app.MapDelete("order/{id}", async (int id, OrderService service) =>
         return Results.Ok(data);
     }
 });
-
+*/
 app.Run();
