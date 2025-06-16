@@ -8,12 +8,14 @@ builder.Services.AddEndpointsApiExplorer();
 var credentials = builder.Configuration.GetConnectionString("credentials");
 builder.Services.AddDbContext<RestaurantDB>(opt => opt.UseNpgsql(credentials, o => o.MapEnum<enum_data>("enum_data")));
 builder.Services.AddScoped<DishService>();
-//builder.Services.AddScoped<OrderService>();
+builder.Services.AddScoped<OrderService>();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
 //dishes endpoints
+
+//get dishes
 app.MapGet("dish/all", async (DishService ds) =>
 {
     var data = await ds.GetAll();
@@ -27,6 +29,7 @@ app.MapGet("dish/all", async (DishService ds) =>
     }
 });
 
+//get dish
 app.MapGet("dish/{name}", async (string name, DishService ds) =>
 {
     var data = await ds.Get(name);
@@ -40,6 +43,7 @@ app.MapGet("dish/{name}", async (string name, DishService ds) =>
     }
 });
 
+//post dish
 app.MapPost("dish/post", async (DishDTO dish, DishService ds) =>
 {
     var data = await ds.Post(dish);
@@ -53,6 +57,7 @@ app.MapPost("dish/post", async (DishDTO dish, DishService ds) =>
     }
 });
 
+//update dish
 app.MapPut("dish/update/{name}", async (string name, DishDTO dish, DishService ds) =>
 {
     var data = await ds.Update(name, dish);
@@ -66,6 +71,7 @@ app.MapPut("dish/update/{name}", async (string name, DishDTO dish, DishService d
     }
 });
 
+//delete dish
 app.MapDelete("dish/delete/{name}", async (string name, DishService ds) =>
 {
     var data = await ds.Delete(name);
@@ -79,7 +85,7 @@ app.MapDelete("dish/delete/{name}", async (string name, DishService ds) =>
     }
 });
 
-/*
+
 //orders endpoints
 app.MapGet("order/{id}", async (int id, OrderService service) =>
 {
@@ -94,6 +100,7 @@ app.MapGet("order/{id}", async (int id, OrderService service) =>
     }
 });
 
+//post order
 app.MapPost("order", async (OrderDTO order, OrderService service) =>
 {
     var data = await service.Post(order);
@@ -107,6 +114,7 @@ app.MapPost("order", async (OrderDTO order, OrderService service) =>
     }
 });
 
+//delete order
 app.MapDelete("order/{id}", async (int id, OrderService service) =>
 {
     var data = await service.Delete(id);
@@ -119,5 +127,5 @@ app.MapDelete("order/{id}", async (int id, OrderService service) =>
         return Results.Ok(data);
     }
 });
-*/
+
 app.Run();

@@ -1,7 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
 
-
 public class OrderService : DataInteface
 {
     private readonly RestaurantDB db;
@@ -10,16 +9,17 @@ public class OrderService : DataInteface
         db = restaurantDB;
     }
 
-    public async Task<object> Get(int id)
+    public async Task<object> Get(object name_id)
     {
         try
         {
-            if (id <= 0)
+            if (name_id is int && int.Parse(name_id.ToString()!) <= 0 || name_id is string)
             {
-                return "id not valid";
+                return "id isnt valid";
             }
             else
             {
+                int id = int.Parse(name_id.ToString()!);
                 if (db.orders.Any(o => o.id == id) == false)
                 {
                     return "order dont exist";
@@ -89,7 +89,7 @@ public class OrderService : DataInteface
                     order.count += dish.amount * dish.price;
                 }
                 await db.orders.AddAsync(order);
-                await db.SaveChangesAsync();
+                db.SaveChanges();
 
                 List<OrderDish> orderDish = new List<OrderDish>();
 
@@ -104,7 +104,7 @@ public class OrderService : DataInteface
                     });
                 }
                 await db.ordersDishes.AddRangeAsync(orderDish);
-                await db.SaveChangesAsync();
+                db.SaveChanges();
                 return order;
             }
             else
@@ -118,32 +118,33 @@ public class OrderService : DataInteface
         }
     }
 
-    public Task<object> Update(int id, object data)
+    public Task<object> Update(object name_id, object data)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<object> Delete(int id)
+    public async Task<object> Delete(object name_id)
     {
-        if (id <= 0)
+        if (name_id is int && int.Parse(name_id.ToString()!) <= 0 || name_id is string)
         {
-            return "id dont valid";
+            return "id isnt valid";
         }
         else
         {
             try
             {
+                int id = int.Parse(name_id.ToString()!);
                 if (await db.ordersDishes.AnyAsync(d => d.orderId == id))
                 {
                     var data = await db.orders.FirstOrDefaultAsync(od => od.id == id);
                     await db.ordersDishes.Where(od => od.orderId == id).ExecuteDeleteAsync();
                     await db.orders.Where(o => o.id == id).ExecuteDeleteAsync();
                     await db.SaveChangesAsync();
-                    return data!;
+                    return "deleted";
                 }
                 else
                 {
-                    return "not deleted";
+                    return "dish not deleted";
                 }
             }
             catch (Exception error)

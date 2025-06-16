@@ -26,6 +26,7 @@ public class DishService : DataInteface
                 }
                 else
                 {
+                    string searchDishName = dish.name!.Replace(" ", "_").ToLower();
                     return new DishDTO
                     {
                         name = dish.name,
@@ -34,7 +35,8 @@ public class DishService : DataInteface
                         type = dish.type.ToString()!.Replace("_", " "),
                         time = dish.time,
                         price = dish.price,
-                        img = dish.img
+                        img = dish.img,
+                        endpoints = [$"UPDATE: dish/update/{searchDishName}", $"DELETE: dish/delete/{searchDishName}"]
                     };
                 }
             }
@@ -59,6 +61,7 @@ public class DishService : DataInteface
                 var dishes = new List<DishDTO>();
                 foreach (var dish in data)
                 {
+                    string searchDishName = dish.name!.Replace(" ", "_").ToLower();
                     dishes.Add(new DishDTO
                     {
                         name = dish.name,
@@ -67,7 +70,8 @@ public class DishService : DataInteface
                         type = dish.type.ToString()!.Replace("_", " "),
                         time = dish.time,
                         price = dish.price,
-                        img = dish.img
+                        img = dish.img,
+                        endpoints = [$"UPDATE: dish/update/{searchDishName}", $"DELETE: dish/delete/{searchDishName}"]
                     });
                 }
                 return dishes;
@@ -106,6 +110,7 @@ public class DishService : DataInteface
                 };
                 await db.dish.AddAsync(dish);
                 await db.SaveChangesAsync();
+                dto.endpoints = [$"GET: dish/{dto.name.Replace(" ", "_").ToLower()}", $"UPDATE: dish/update/{dto.name.Replace(" ", "_").ToLower()}", $"DELETE: /dish/delete/{dto.name.Replace(" ", "_").ToLower()}"];
                 return dto;
             }
             else
@@ -151,7 +156,8 @@ public class DishService : DataInteface
 
                     await db.SaveChangesAsync();
 
-                    return data;
+                    dto.endpoints = [$"GET: dish/{dto.name?.Replace(" ", "_").ToLower()}", $"UPDATE: dish/update/{dto.name?.Replace(" ", "_").ToLower()}", $"DELETE: /dish/delete/{dto.name?.Replace(" ", "_").ToLower()}"];
+                    return dto;
                 }
                 else
                 {
@@ -180,8 +186,11 @@ public class DishService : DataInteface
             else if (db.dish.Any(d => d.name == name_id.ToString()!.Replace("_", " ").ToLower()))
             {
                 string name = name_id.ToString()!.Replace("_", " ").ToLower();
+                int? idDish = (await db.dish.FirstOrDefaultAsync(d => d.name == name))?.id;
+                await db.ordersDishes.Where(od => od.dishId == idDish).ExecuteDeleteAsync();
+                db.SaveChanges();
                 await db.dish.Where(d => d.name == name).ExecuteDeleteAsync();
-                await db.SaveChangesAsync();
+                db.SaveChanges();
                 return true;
             }
             else

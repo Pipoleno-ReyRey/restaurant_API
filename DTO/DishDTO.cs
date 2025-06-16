@@ -7,5 +7,6 @@ public class DishDTO
     public TimeOnly? time { get; set; }
     public float? price { get; set; }
     public string? img { get; set; }
-    public int? amount { get; set; }        
+    public int? amount { get; set; }
+    public string[]? endpoints { get; set; }        
 }
