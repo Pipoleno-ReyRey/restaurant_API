@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  restaurantdb:
+    image: postgres
+    container_name: restaurantdb
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: reynaldo066512
+      POSTGRES_DB: restaurant_dishfull
+    volumes:
+      - D:/restaurantDB/data
+    ports:
+      - "6565:5432"

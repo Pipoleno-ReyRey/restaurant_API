@@ -1,4 +1,5 @@
 
+using Humanizer;
 using Microsoft.EntityFrameworkCore;
 
 public class OrderService : DataInteface
@@ -27,7 +28,12 @@ public class OrderService : DataInteface
                 else
                 {
                     OrderDish[] data = await db.ordersDishes.Where(od => od.orderId == id).ToArrayAsync();
-                    Dish[] dishes = await db.dish.ToArrayAsync();
+                    List<Dish> dishes = new List<Dish>();
+                    foreach (OrderDish id_ in data)
+                    {
+                        Dish? item = await db.dish.FirstOrDefaultAsync(o => o.id == id_.dishId);
+                        dishes.Add(item!);
+                    }
                     List<DishDTO>? dishesOrder = new List<DishDTO>();
                     foreach (OrderDish dish in data)
                     {
